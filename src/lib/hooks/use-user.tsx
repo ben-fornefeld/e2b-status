@@ -2,7 +2,7 @@
 
 import { User } from "@supabase/supabase-auth-helpers/react";
 import { Session } from "@supabase/supabase-js";
-import { createContext, useEffect, useMemo } from "react";
+import { createContext, useContext, useEffect, useMemo } from "react";
 import { createPagesBrowserClient } from "@supabase/auth-helpers-nextjs";
 import { useQuery } from "@tanstack/react-query";
 import { queryClient } from "@/components/global/client-providers";
@@ -72,4 +72,12 @@ export const CustomUserContextProvider = (props: any) => {
   );
 
   return <UserContext.Provider value={value} {...props} />;
+};
+
+export const useUser = () => {
+  const context = useContext(UserContext);
+  if (context === undefined) {
+    throw new Error("useUser must be used within a UserContextProvider");
+  }
+  return context;
 };

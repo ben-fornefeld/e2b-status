@@ -29,13 +29,11 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <ClientProviders>
-            <main className="min-h-screen flex flex-col items-center">
-              <div className="flex-1 w-full flex flex-col gap-20 items-center">
+            <main className=" min-h-screen flex flex-col items-center">
+              <div className="flex-1 w-full gap-20">
                 <Navbar />
 
-                <div className="flex flex-col gap-20 max-w-5xl p-5">
-                  {children}
-                </div>
+                <div className="max-w-4xl p-5 mx-auto">{children}</div>
               </div>
 
               <Footer />

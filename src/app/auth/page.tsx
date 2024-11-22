@@ -1,31 +1,17 @@
 "use client";
 
-import { Auth } from "@supabase/auth-ui-react";
-import { ThemeSupa } from "@supabase/auth-ui-shared";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import { useTheme } from "next-themes";
+import dynamic from "next/dynamic";
 
-const redirectTo = process.env.NEXT_PUBLIC_BASE_URL!;
+// importing AuthForm dynamically to prevent hydration issues cause by useTheme
+const AuthForm = dynamic(() => import("@/components/auth/auth-form"), {
+  ssr: false,
+});
 
-export default function SignIn() {
-  const supabase = createClientComponentClient();
-
-  const { resolvedTheme: theme } = useTheme();
-
+export default function AuthPage() {
   return (
     <div className="flex-1 flex flex-col min-w-64">
       <h1 className="text-2xl font-medium mb-8">Sign in</h1>
-      <Auth
-        supabaseClient={supabase}
-        appearance={{ theme: ThemeSupa }}
-        theme={theme}
-        providers={["github"]}
-        view="sign_in"
-        showLinks={false}
-        socialLayout="horizontal"
-        onlyThirdPartyProviders
-        redirectTo={redirectTo}
-      />
+      <AuthForm />
     </div>
   );
 }
