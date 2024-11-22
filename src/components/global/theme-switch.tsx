@@ -11,7 +11,7 @@ export default function ThemeSwitch() {
     <div className="inline-flex rounded-md border">
       <Button
         variant="ghost"
-        size="iconSm"
+        size="icon"
         className={`rounded-r-none ${theme === "dark" ? "bg-muted" : ""}`}
         onClick={() => setTheme("dark")}
       >
@@ -19,7 +19,7 @@ export default function ThemeSwitch() {
       </Button>
       <Button
         variant="ghost"
-        size="iconSm"
+        size="icon"
         className={`rounded-l-none border-l ${theme === "light" ? "bg-muted" : ""}`}
         onClick={() => setTheme("light")}
       >
