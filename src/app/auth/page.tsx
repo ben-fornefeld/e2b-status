@@ -5,7 +5,7 @@ import { ThemeSupa } from "@supabase/auth-ui-shared";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useTheme } from "next-themes";
 
-const redirectTo = process.env.VERCEL_URL ?? "http://localhost:3000";
+const redirectTo = process.env.NEXT_PUBLIC_BASE_URL!;
 
 export default function SignIn() {
   const supabase = createClientComponentClient();
