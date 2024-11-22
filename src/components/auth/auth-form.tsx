@@ -19,7 +19,7 @@ export default function AuthForm() {
       showLinks={false}
       socialLayout="horizontal"
       onlyThirdPartyProviders
-      redirectTo={process.env.NEXT_PUBLIC_BASE_URL!}
+      redirectTo={window?.location.origin ?? process.env.NEXT_PUBLIC_BASE_URL!}
     />
   );
 }
