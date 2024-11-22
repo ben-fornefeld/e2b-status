@@ -9,6 +9,12 @@ export default function AuthForm() {
   const supabase = createClientComponentClient();
   const { resolvedTheme: theme } = useTheme();
 
+  // Get the redirect URL safely
+  const redirectUrl =
+    typeof window !== "undefined"
+      ? `${window.location.protocol}//${window.location.host}`
+      : process.env.NEXT_PUBLIC_BASE_URL;
+
   return (
     <Auth
       supabaseClient={supabase}
@@ -19,7 +25,7 @@ export default function AuthForm() {
       showLinks={false}
       socialLayout="horizontal"
       onlyThirdPartyProviders
-      redirectTo={window?.location.origin ?? process.env.NEXT_PUBLIC_BASE_URL!}
+      redirectTo={redirectUrl}
     />
   );
 }
