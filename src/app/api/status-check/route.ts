@@ -1,13 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createAdminClient } from "@/utils/supabase/server";
+import { supabaseAdmin } from "@/utils/supabase/server";
 
 export const runtime = "edge";
 
 async function checkStatus() {
   // using admin client here because this is a system-level operation
   // running on a cron job, not a user-initiated action
-
-  const supabase = createAdminClient();
 
   const startTime = Date.now();
 
@@ -24,7 +22,7 @@ async function checkStatus() {
 
   const responseTime = Date.now() - startTime;
 
-  const res = await supabase.from("status_checks").insert({
+  const res = await supabaseAdmin.from("status_checks").insert({
     response_time_ms: responseTime,
     success: response.status === 201,
     http_status: response.status,
