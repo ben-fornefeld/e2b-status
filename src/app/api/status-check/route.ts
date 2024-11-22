@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/utils/supabase/server";
 
 export const runtime = "edge";
@@ -49,7 +49,13 @@ async function checkStatus() {
   }
 }
 
-export async function GET() {
+export async function GET(req: NextRequest, res: NextResponse) {
+  if (
+    req.headers.get("Authorization") !== `Bearer ${process.env.CRON_SECRET}`
+  ) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   const result = await checkStatus();
 
   return NextResponse.json(result);
