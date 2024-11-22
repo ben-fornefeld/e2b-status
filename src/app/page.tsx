@@ -1,5 +1,6 @@
 import IncidentsList from "@/components/incidents/incidents-list";
 import StatusChart from "@/components/status/status-chart";
+import { Button } from "@/components/ui/button";
 import { getIncidents } from "@/lib/actions/incidents-api";
 import { getStatusChecks } from "@/lib/actions/status-checks-api";
 import { StatusDataProvider } from "@/lib/hooks/use-status-data";
@@ -25,12 +26,8 @@ export default async function Index() {
     >
       {/* h1 only present for SEO purposes */}
       <h1 className="sr-only">Current Api Status</h1>
-      <div className="py-12 flex flex-col gap-8">
-        <h2 className="text-2xl font-semibold">Latency</h2>
-
+      <div className="flex flex-col gap-8 py-12">
         <StatusChart />
-
-        <h2 className="text-2xl font-semibold mt-8">Recent Incidents</h2>
 
         <IncidentsList />
       </div>

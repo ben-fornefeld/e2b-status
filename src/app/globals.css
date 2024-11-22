@@ -48,7 +48,29 @@
   }
 
   .dark {
-    --background: 0 0% 4%;
+    --background-000: 0 0% 12%;
+    --background-100: 0 0% 9%;
+    --background-200: 0 0% 6%;
+    --background-300: 0 0% 3%;
+    --background-400: 0 0% 1%;
+    --background-500: 0 0% 0%;
+
+    --border-000: 0 0% 20%;
+    --border-100: 0 0% 18%;
+    --border-200: 0 0% 15%;
+    --border-300: 0 0% 12%;
+    --border-400: 0 0% 10%;
+    --border-500: 0 0% 8%;
+
+    --primary-000: 32 100% 55%;
+    --primary-100: 30 100% 50%;
+    --primary-200: 28 100% 45%;
+    --primary-300: 26 100% 40%;
+    --primary-400: 24 100% 35%;
+    --primary-500: 22 100% 30%;
+
+    --primary-foreground: 0 0% 98%;
+
     --foreground: 0 0% 98%;
 
     --card: 0 0% 4%;
@@ -56,15 +78,11 @@
 
     --popover: 0 0% 4%;
     --popover-foreground: 0 0% 98%;
-
-    --primary: 32 100% 50%;
-    --primary-foreground: 0 0% 98%;
-
     --secondary: 0 0% 15%;
     --secondary-foreground: 0 0% 98%;
 
-    --muted: 0 0% 15%;
-    --muted-foreground: 0 0% 65%;
+    --muted: 0 0% 10%;
+    --muted-foreground: 0 0% 45%;
 
     --accent: 32 100% 50%;
     --accent-foreground: 0 0% 98%;
@@ -72,14 +90,13 @@
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 0 0% 15%;
     --input: 0 0% 15%;
     --ring: 32 100% 50%;
   }
 
   html,
   body {
-    @apply bg-background text-foreground min-h-screen;
+    @apply min-h-screen bg-gradient-to-b from-background-200 to-background-300 text-foreground;
   }
 
   [inert] ::-webkit-scrollbar {

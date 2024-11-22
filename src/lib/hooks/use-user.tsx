@@ -6,6 +6,7 @@ import { createContext, useContext, useEffect, useMemo } from "react";
 import { createPagesBrowserClient } from "@supabase/auth-helpers-nextjs";
 import { useQuery } from "@tanstack/react-query";
 import { queryClient } from "@/components/global/client-providers";
+import { checkIsAdmin } from "@/utils/utils";
 
 export type E2BUser = User & {
   // should contain e2b user details
@@ -16,6 +17,7 @@ type UserContextType = {
   session: Session | null;
   user: E2BUser | null;
   error: Error | null;
+  isAdmin: boolean;
 };
 
 export const UserContext = createContext<UserContextType | undefined>(
@@ -37,6 +39,7 @@ export const CustomUserContextProvider = (props: any) => {
         error,
       } = await supabase.auth.getSession();
       if (error) throw error;
+
       return session;
     },
   });
@@ -67,6 +70,7 @@ export const CustomUserContextProvider = (props: any) => {
       error,
       session,
       user: session?.user ?? null,
+      isAdmin: session?.user?.email ? checkIsAdmin(session.user.email) : false,
     }),
     [isLoading, error, session]
   );

@@ -21,22 +21,24 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={GeistSans.className} suppressHydrationWarning>
-      <body>
+      {/* we have a gradient background, hence we fix body so that mac devices to not look weird when overscrolling */}
+      <body className="fixed inset-0">
         <ThemeProvider
           attribute="class"
-          defaultTheme="system"
-          enableSystem={true}
+          defaultTheme="dark"
+          enableSystem={false}
           disableTransitionOnChange
+          forcedTheme="dark"
         >
           <ClientProviders>
-            <main className=" min-h-screen flex flex-col items-center">
-              <div className="flex-1 w-full gap-20">
+            <main className="flex min-h-screen flex-col items-center">
+              <div className="w-full flex-1 gap-20 pt-16">
                 <Navbar />
 
-                <div className="max-w-4xl p-5 mx-auto">{children}</div>
+                <div className="mx-auto max-w-4xl p-5">{children}</div>
               </div>
 
-              <Footer />
+              {/* <Footer /> */}
             </main>
           </ClientProviders>
         </ThemeProvider>
