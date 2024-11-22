@@ -2,12 +2,8 @@
 
 import { Status } from "@/types/status";
 import { StatusCheck } from "@/types/status-check";
-import { createAdminClient } from "@/utils/supabase/server";
-import {
-  PostgrestError,
-  PostgrestResponse,
-  PostgrestSingleResponse,
-} from "@supabase/supabase-js";
+import { supabaseAdmin } from "@/utils/supabase/server";
+import { PostgrestResponse } from "@supabase/supabase-js";
 
 interface ErrorResponse {
   type: "error";
@@ -23,10 +19,8 @@ type GetStatusChecksResponse = ErrorResponse | GetStatusChecksSuccessResponse;
 
 export const getStatusChecks = async (): Promise<GetStatusChecksResponse> => {
   try {
-    const supabase = createAdminClient();
-
     // only get status checks from the last 24 hours
-    const { data, error } = await supabase
+    const { data, error }: PostgrestResponse<StatusCheck> = await supabaseAdmin
       .from("status_checks")
       .select("*")
       .gte(
@@ -68,13 +62,12 @@ const FAILURE_THRESHOLD = RECENT_CHECKS_COUNT / 2;
 export const checkOperationality =
   async (): Promise<CheckOperationalityResponse> => {
     try {
-      const supabase = createAdminClient();
-
-      const { data, error }: PostgrestResponse<StatusCheck> = await supabase
-        .from("status_checks")
-        .select("*")
-        .order("timestamp", { ascending: false })
-        .limit(RECENT_CHECKS_COUNT);
+      const { data, error }: PostgrestResponse<StatusCheck> =
+        await supabaseAdmin
+          .from("status_checks")
+          .select("*")
+          .order("timestamp", { ascending: false })
+          .limit(RECENT_CHECKS_COUNT);
 
       if (error) {
         throw error;
