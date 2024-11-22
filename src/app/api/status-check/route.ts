@@ -29,6 +29,7 @@ async function checkStatus() {
     success: response.status === 201,
     http_status: response.status,
     error_message: response.status !== 201 ? await response.text() : null,
+    timestamp: new Date().toISOString(),
   });
 
   if (res.status !== 201 || res.error) {

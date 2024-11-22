@@ -19,14 +19,7 @@ export default function ClientProviders({
 }) {
   return (
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider
-        attribute="class"
-        defaultTheme="dark"
-        enableSystem={false}
-        disableTransitionOnChange
-      >
-        <CustomUserContextProvider>{children}</CustomUserContextProvider>
-      </ThemeProvider>
+      <CustomUserContextProvider>{children}</CustomUserContextProvider>
     </QueryClientProvider>
   );
 }
