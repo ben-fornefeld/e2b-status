@@ -3,10 +3,11 @@ import UserAvatar from "./user-avatar";
 import { Logo } from "./logo";
 import { Badge } from "../ui/badge";
 import { StatusIndicator } from "./status-indicator";
+import { checkOperationality } from "@/lib/actions/status-checks-api";
 
-// TODO: find a way to get overall operational status here
+export default async function Navbar() {
+  const { status } = await checkOperationality();
 
-export default function Navbar() {
   return (
     <nav className="w-full flex justify-center border-b border-b-foreground/10 h-16">
       <div className="w-full max-w-4xl flex justify-between items-center p-3 px-5 text-sm">
@@ -16,7 +17,10 @@ export default function Navbar() {
           </Link>
 
           <Badge variant="outline">
-            <StatusIndicator status="operational" /> All Systems Operational
+            <StatusIndicator status={status} />{" "}
+            {status === "operational"
+              ? "All Systems Operational"
+              : "Some Systems Degraded"}
           </Badge>
         </div>
 
