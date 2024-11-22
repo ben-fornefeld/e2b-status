@@ -1,7 +1,7 @@
 import { StatusChart } from "@/components/status/status-chart";
 import { getStatusChecks } from "@/lib/actions/status-checks-api";
 
-// Disable caching for this page to ensure we always get the latest data
+// disable caching for this page to ensure we always get the latest data
 export const fetchCache = "force-no-store";
 
 export default async function Index() {
