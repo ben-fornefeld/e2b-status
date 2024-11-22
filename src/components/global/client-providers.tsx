@@ -2,6 +2,7 @@
 
 import { CustomUserContextProvider } from "@/lib/hooks/useUser";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ThemeProvider } from "next-themes";
 
 export const queryClient = new QueryClient({
   defaultOptions: {
@@ -18,7 +19,14 @@ export default function ClientProviders({
 }) {
   return (
     <QueryClientProvider client={queryClient}>
-      <CustomUserContextProvider>{children}</CustomUserContextProvider>
+      <ThemeProvider
+        attribute="class"
+        defaultTheme="dark"
+        enableSystem={false}
+        disableTransitionOnChange
+      >
+        <CustomUserContextProvider>{children}</CustomUserContextProvider>
+      </ThemeProvider>
     </QueryClientProvider>
   );
 }
