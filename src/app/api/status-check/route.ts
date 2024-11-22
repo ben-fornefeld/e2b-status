@@ -24,17 +24,22 @@ async function checkStatus() {
 
   const responseTime = Date.now() - startTime;
 
-  await supabase.from("status_checks").insert({
+  const res = await supabase.from("status_checks").insert({
     response_time_ms: responseTime,
     success: response.status === 201,
     http_status: response.status,
     error_message: response.status !== 201 ? await response.text() : null,
   });
 
+  if (res.status !== 201 || res.error) {
+    throw new Error(res.error?.message ?? "Failed to insert status check");
+  }
+
   return { success: true };
 }
 
 export async function GET(req: NextRequest) {
+  // cron job secret is set in environment and used by vercel cron job when calling this endpoint
   if (
     req.headers.get("Authorization") !== `Bearer ${process.env.CRON_SECRET}`
   ) {
