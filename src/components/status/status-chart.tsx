@@ -1,5 +1,6 @@
 "use client";
 
+import { useStatusData } from "@/lib/hooks/use-status-data";
 import { StatusCheck } from "@/types/status-check";
 import { FC } from "react";
 import {
@@ -11,11 +12,9 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-interface StatusChartProps {
-  statusChecks: StatusCheck[];
-}
+export default function StatusChart() {
+  const { statusChecks } = useStatusData();
 
-export const StatusChart: FC<StatusChartProps> = ({ statusChecks }) => {
   const data = statusChecks.map((check) => ({
     timestamp: new Date(check.timestamp),
     responseTime: check.response_time_ms,
@@ -49,12 +48,7 @@ export const StatusChart: FC<StatusChartProps> = ({ statusChecks }) => {
             stroke="hsl(var(--muted-foreground))"
           />
           <YAxis
-            label={{
-              value: "Response Time (ms)",
-              angle: -90,
-              position: "insideLeft",
-              fill: "hsl(var(--muted-foreground))",
-            }}
+            domain={[0, 2000]}
             tick={{ fill: "hsl(var(--muted-foreground))" }}
             stroke="hsl(var(--muted-foreground))"
           />
@@ -93,4 +87,4 @@ export const StatusChart: FC<StatusChartProps> = ({ statusChecks }) => {
       </ResponsiveContainer>
     </div>
   );
-};
+}

@@ -1,4 +1,5 @@
-import { StatusChart } from "@/components/status/status-chart";
+import IncidentsList from "@/components/incidents/incidents-list";
+import StatusChart from "@/components/status/status-chart";
 import { getIncidents } from "@/lib/actions/incidents-api";
 import { getStatusChecks } from "@/lib/actions/status-checks-api";
 import { StatusDataProvider } from "@/lib/hooks/use-status-data";
@@ -22,10 +23,16 @@ export default async function Index() {
         incidents: incidentRes.incidents,
       }}
     >
+      {/* h1 only present for SEO purposes */}
+      <h1 className="sr-only">Current Api Status</h1>
       <div className="py-12 flex flex-col gap-8">
-        <h1 className="text-3xl font-semibold">Latency</h1>
+        <h2 className="text-2xl font-semibold">Latency</h2>
 
-        <StatusChart statusChecks={statusCheckRes.status_checks} />
+        <StatusChart />
+
+        <h2 className="text-2xl font-semibold mt-8">Recent Incidents</h2>
+
+        <IncidentsList />
       </div>
     </StatusDataProvider>
   );
