@@ -1,10 +1,11 @@
+import "./globals.css";
+
 import { GeistSans } from "geist/font/sans";
 import ClientProviders from "../components/global/client-providers";
 import Navbar from "../components/global/navbar";
-import Footer from "../components/global/footer";
-
-import "./globals.css";
 import { ThemeProvider } from "next-themes";
+
+import "./fonts";
 
 const defaultUrl = process.env.NEXT_PUBLIC_BASE_URL!;
 

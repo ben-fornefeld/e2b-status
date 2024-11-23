@@ -96,7 +96,16 @@
 
   html,
   body {
-    @apply min-h-screen bg-gradient-to-b from-background-200 to-background-300 text-foreground;
+    @apply font-main min-h-screen bg-gradient-to-b from-background-200 to-background-300 text-foreground;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-display font-semibold tracking-wide;
   }
 
   [inert] ::-webkit-scrollbar {

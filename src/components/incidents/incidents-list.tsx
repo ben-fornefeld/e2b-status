@@ -29,7 +29,7 @@ export default function IncidentsList() {
   return (
     <>
       <div className="mt-8 flex items-center justify-between">
-        <h2 className="text-2xl font-light tracking-wide">Recent Incidents</h2>
+        <h2 className="text-2xl">Recent Incidents</h2>
         {isAdmin && (
           <Button>
             <CalendarIcon className="size-4" /> Report Incident

@@ -18,13 +18,12 @@ import {
 } from "@/components/ui/select";
 import { useState, useMemo, useCallback } from "react";
 import { cn } from "@/lib/utils";
-import { StatusCheck } from "@/types/status-check";
 
 export default function LatencyChart() {
-  const [timeRange, setTimeRange] = useState("24h");
+  const [timeRange, setTimeRange] = useState("1h");
   const { statusChecks } = useStatusData();
 
-  const filterDataByTimeRange = useCallback((data: any[], range: string) => {
+  const filterDataByTimeRange = (data: any[], range: string) => {
     const now = new Date();
     const utcNow = new Date(now.getTime() + now.getTimezoneOffset() * 60000);
     const ranges: { [key: string]: number } = {
@@ -38,7 +37,7 @@ export default function LatencyChart() {
     return data.filter(
       (item) => new Date(item.timestamp).getTime() > cutoff.getTime(),
     );
-  }, []);
+  };
 
   const data = useMemo(
     () =>
@@ -71,7 +70,7 @@ export default function LatencyChart() {
 
   return (
     <>
-      <h2 className="text-2xl font-light tracking-wide">Sandbox Latency</h2>
+      <h2 className="text-2xl">Sandbox Latency</h2>
       <div className="w-full space-y-4">
         <Select value={timeRange} onValueChange={setTimeRange}>
           <SelectTrigger className="w-[150px]">

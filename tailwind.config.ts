@@ -30,6 +30,10 @@ export default {
       "9xl": ["8rem", { lineHeight: "1" }],
     },
     extend: {
+      fontFamily: {
+        main: ["Figtree", "sans-serif"],
+        display: ["Manrope", "sans-serif"],
+      },
       colors: {
         scrollbar: "#5A5A5A",
         gray: {
