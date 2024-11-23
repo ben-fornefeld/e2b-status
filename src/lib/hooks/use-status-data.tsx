@@ -1,15 +1,17 @@
 "use client";
 
-import { Incident } from "@/types/incident";
+import { Incident, IncidentStep } from "@/types/incident";
 import { StatusCheck } from "@/types/status-check";
 import { createContext, useContext, useState } from "react";
 
 // the data that is provided by the server will be stored here
 // -> avoids prop-drilling and makes the data available for any child component
 
+type IncidentWithSteps = Incident & { steps: IncidentStep[] };
+
 type StatusData = {
   statusChecks: StatusCheck[];
-  incidents: Incident[];
+  incidents: IncidentWithSteps[];
 };
 
 export const StatusDataContext = createContext<StatusData>({
@@ -25,7 +27,7 @@ export const StatusDataProvider = ({
   initialData: StatusData;
 }) => {
   // could be stored in refs since these dont change atm
-  const [incidents] = useState<Incident[]>(initialData.incidents);
+  const [incidents] = useState<IncidentWithSteps[]>(initialData.incidents);
   const [statusChecks] = useState<StatusCheck[]>(initialData.statusChecks);
 
   return (

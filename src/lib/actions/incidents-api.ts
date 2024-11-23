@@ -1,6 +1,6 @@
 "use server";
 
-import { Incident } from "@/types/incident";
+import { Incident, IncidentStep } from "@/types/incident";
 import { supabaseAdmin } from "@/utils/supabase/server";
 import { PostgrestResponse } from "@supabase/supabase-js";
 
@@ -9,9 +9,11 @@ interface ErrorResponse {
   message: string;
 }
 
+type IncidentWithSteps = Incident & { steps: IncidentStep[] };
+
 interface GetIncidentsSuccessResponse {
   type: "success";
-  incidents: Incident[];
+  incidents: IncidentWithSteps[];
 }
 
 type GetIncidentsResponse = ErrorResponse | GetIncidentsSuccessResponse;
@@ -19,17 +21,26 @@ type GetIncidentsResponse = ErrorResponse | GetIncidentsSuccessResponse;
 export const getIncidents = async (): Promise<GetIncidentsResponse> => {
   try {
     // only get incidents from the last 14 days
-    const { data, error }: PostgrestResponse<Incident> = await supabaseAdmin
-      .from("incidents")
-      .select("*")
-      .gte(
-        "created_at",
-        new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString()
-      );
+    const { data, error }: PostgrestResponse<IncidentWithSteps> =
+      await supabaseAdmin
+        .from("incidents")
+        .select(
+          `
+          *,
+          incident_steps (*)
+        `,
+        )
+        .order("timestamp", {
+          ascending: true,
+          referencedTable: "incident_steps",
+        })
+        .gte(
+          "timestamp",
+          new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString(),
+        );
 
     if (error) {
       console.error(error);
-
       return {
         type: "error",
         message: error.message,
@@ -42,7 +53,6 @@ export const getIncidents = async (): Promise<GetIncidentsResponse> => {
     };
   } catch (error) {
     console.error(error);
-
     return {
       type: "error",
       message: "Error fetching incidents",

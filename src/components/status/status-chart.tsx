@@ -69,7 +69,7 @@ export default function LatencyChart() {
   };
 
   return (
-    <>
+    <div className="flex flex-col gap-8">
       <h2 className="text-2xl">Sandbox Latency</h2>
       <div className="w-full space-y-4">
         <Select value={timeRange} onValueChange={setTimeRange}>
@@ -167,6 +167,6 @@ export default function LatencyChart() {
           </ResponsiveContainer>
         </div>
       </div>
-    </>
+    </div>
   );
 }

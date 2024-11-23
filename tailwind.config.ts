@@ -1,6 +1,7 @@
 import { type Config } from "tailwindcss";
 import headlessuiPlugin from "@headlessui/tailwindcss";
 import animatePlugin from "tailwindcss-animate";
+import scrollbarPlugin from "tailwind-scrollbar";
 
 export default {
   content: ["./src/**/*.{js,mjs,jsx,ts,tsx,mdx}"],
@@ -162,5 +163,5 @@ export default {
       },
     },
   },
-  plugins: [headlessuiPlugin, animatePlugin],
+  plugins: [headlessuiPlugin, animatePlugin, scrollbarPlugin],
 } satisfies Config;

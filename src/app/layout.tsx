@@ -6,6 +6,7 @@ import Navbar from "../components/global/navbar";
 import { ThemeProvider } from "next-themes";
 
 import "./fonts";
+import { Toaster } from "@/components/ui/toaster";
 
 const defaultUrl = process.env.NEXT_PUBLIC_BASE_URL!;
 
@@ -32,7 +33,7 @@ export default function RootLayout({
           forcedTheme="dark"
         >
           <ClientProviders>
-            <main className="flex min-h-screen flex-col items-center">
+            <main className="scrollbar-none max-h-full overflow-y-auto">
               <div className="w-full flex-1 gap-20 pt-16">
                 <Navbar />
 
@@ -41,6 +42,7 @@ export default function RootLayout({
 
               {/* <Footer /> */}
             </main>
+            <Toaster />
           </ClientProviders>
         </ThemeProvider>
       </body>

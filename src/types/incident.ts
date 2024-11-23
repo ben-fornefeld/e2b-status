@@ -1,8 +1,21 @@
+export type IncidentStatus = "ongoing" | "resolved";
+
 export type Incident = {
   id: string;
   name: string;
   description: string;
-  status: string;
-  updated_at: Date;
-  created_at: Date;
+  timestamp: Date;
+};
+
+export type IncidentStep = {
+  id: string;
+  incident_id: string;
+  text: string;
+  timestamp: Date;
+  status: IncidentStatus;
+};
+
+export type IncidentStepInput = {
+  text: string;
+  status: IncidentStatus;
 };
