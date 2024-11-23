@@ -1,6 +1,6 @@
-import { Figtree, Manrope } from "next/font/google";
+import { Manrope, Nunito_Sans } from "next/font/google";
 
-export const main = Figtree({
+export const main = Nunito_Sans({
   subsets: ["latin"],
   preload: true,
 });

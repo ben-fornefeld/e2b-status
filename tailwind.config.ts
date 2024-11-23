@@ -32,7 +32,7 @@ export default {
     },
     extend: {
       fontFamily: {
-        main: ["Figtree", "sans-serif"],
+        main: ["Nunito Sans", "sans-serif"],
         display: ["Manrope", "sans-serif"],
       },
       colors: {
