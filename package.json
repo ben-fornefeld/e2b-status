@@ -8,12 +8,6 @@
   },
   "dependencies": {
     "@headlessui/tailwindcss": "^0.2.1",
-    "@hookform/resolvers": "^3.9.1",
-    "@milkdown/core": "^7.5.0",
-    "@milkdown/kit": "^7.5.5",
-    "@milkdown/preset-commonmark": "^7.5.0",
-    "@milkdown/react": "^7.5.0",
-    "@milkdown/theme-nord": "^7.5.0",
     "@radix-ui/react-alert-dialog": "^1.1.2",
     "@radix-ui/react-avatar": "^1.1.1",
     "@radix-ui/react-checkbox": "^1.1.1",
