@@ -35,6 +35,47 @@ export default function IncidentsList() {
 
   return (
     <div className="mt-12">
+      <AnimatePresence>
+        {isReportIncidentOpen && (
+          <motion.div
+            initial={{
+              opacity: 0,
+              height: 0,
+              y: 5,
+              marginBottom: 0,
+              scale: 0.95,
+            }}
+            animate={{
+              opacity: 1,
+              height: "auto",
+              y: 0,
+              scale: 1,
+              marginBottom: "2.5rem",
+            }}
+            exit={{
+              opacity: 0,
+              height: 0,
+              y: -5,
+              marginBottom: 0,
+              scale: 0.95,
+            }}
+            transition={{
+              duration: 0.2,
+              ease: (t) => exponentialEaseInOut(t),
+              height: {
+                duration: 0.3,
+              },
+              marginTop: {
+                duration: 0.5,
+              },
+            }}
+            style={{ overflow: "hidden" }}
+          >
+            <ReportIncidentView />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <div className="flex items-center justify-between">
         <h2 className="text-2xl">Recent Incidents</h2>
         {isAdmin && (
@@ -63,48 +104,18 @@ export default function IncidentsList() {
         )}
       </div>
 
-      <div className="mx-auto w-[95%]">
-        <AnimatePresence>
-          {isReportIncidentOpen && (
-            <motion.div
-              initial={{ opacity: 0, height: 0, y: 5, marginTop: 0 }}
-              animate={{
-                opacity: 1,
-                height: "auto",
-                y: 0,
-                marginTop: "1.5rem",
-              }}
-              exit={{ opacity: 0, height: 0, y: -5, marginTop: 0 }}
-              transition={{
-                duration: 0.2,
-                ease: (t) => exponentialEaseInOut(t),
-                height: {
-                  duration: 0.3,
-                },
-                marginTop: {
-                  duration: 0.5,
-                },
-              }}
-              style={{ overflow: "hidden" }}
-            >
-              <ReportIncidentView />
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        <div className="mt-4 flex flex-col gap-4">
-          {incidents.length === 0 && (
-            <Alert variant="surfaceGradient" className="mt-4">
-              <AlertTitle>{formattedDate}</AlertTitle>
-              <AlertDescription className="text-muted-foreground">
-                No incidents have been reported in the last 14 days.
-              </AlertDescription>
-            </Alert>
-          )}
-          {incidents.map((incident) => (
-            <IncidentCard incident={incident} />
-          ))}
-        </div>
+      <div className="mt-8 flex flex-col gap-12">
+        {incidents.length === 0 && (
+          <Alert variant="surfaceGradient" className="mt-4">
+            <AlertTitle>{formattedDate}</AlertTitle>
+            <AlertDescription className="text-muted-foreground">
+              No incidents have been reported in the last 14 days.
+            </AlertDescription>
+          </Alert>
+        )}
+        {incidents.map((incident) => (
+          <IncidentCard key={incident.id} incident={incident} />
+        ))}
       </div>
     </div>
   );

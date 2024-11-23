@@ -3,10 +3,10 @@
 import { User } from "@supabase/supabase-auth-helpers/react";
 import { Session } from "@supabase/supabase-js";
 import { createContext, useContext, useEffect, useMemo } from "react";
-import { createPagesBrowserClient } from "@supabase/auth-helpers-nextjs";
 import { useQuery } from "@tanstack/react-query";
 import { queryClient } from "@/components/global/client-providers";
 import { checkIsAdmin } from "@/utils/utils";
+import { supabase } from "../supabase/client";
 
 export type E2BUser = User & {
   // should contain e2b user details
@@ -21,12 +21,10 @@ type UserContextType = {
 };
 
 export const UserContext = createContext<UserContextType | undefined>(
-  undefined
+  undefined,
 );
 
 export const CustomUserContextProvider = (props: any) => {
-  const supabase = createPagesBrowserClient();
-
   const {
     data: session,
     error,
@@ -72,7 +70,7 @@ export const CustomUserContextProvider = (props: any) => {
       user: session?.user ?? null,
       isAdmin: session?.user?.email ? checkIsAdmin(session.user.email) : false,
     }),
-    [isLoading, error, session]
+    [isLoading, error, session],
   );
 
   return <UserContext.Provider value={value} {...props} />;

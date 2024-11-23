@@ -36,6 +36,18 @@ export const neonVariants = cva("border transition-all duration-300", {
         "dark:hover:shadow-[inset_0_0_25px_rgba(156,163,175,0.3)] hover:shadow-[inset_0_0_25px_rgba(156,163,175,0.2)]",
         "hover:border-gray-300 dark:hover:bg-gray-950/40 hover:bg-gray-100/50",
       ),
+      green: cn(
+        "border-green-400 dark:bg-green-950/30 bg-green-100/40 dark:text-green-50 text-green-600",
+        "dark:shadow-[inset_0_0_20px_rgba(74,222,128,0.3)] shadow-[inset_0_0_20px_rgba(74,222,128,0.1)]",
+        "dark:hover:shadow-[inset_0_0_25px_rgba(74,222,128,0.3)] hover:shadow-[inset_0_0_25px_rgba(74,222,128,0.2)]",
+        "hover:border-green-300 dark:hover:bg-green-950/40 hover:bg-green-100/50",
+      ),
+      red: cn(
+        "border-red-400 dark:bg-red-950/30 bg-red-100/40 dark:text-red-50 text-red-600",
+        "dark:shadow-[inset_0_0_20px_rgba(248,113,113,0.3)] shadow-[inset_0_0_20px_rgba(248,113,113,0.1)]",
+        "dark:hover:shadow-[inset_0_0_25px_rgba(248,113,113,0.3)] hover:shadow-[inset_0_0_25px_rgba(248,113,113,0.2)]",
+        "hover:border-red-300 dark:hover:bg-red-950/40 hover:bg-red-100/50",
+      ),
     },
   },
   defaultVariants: {

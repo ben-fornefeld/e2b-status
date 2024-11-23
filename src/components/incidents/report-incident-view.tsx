@@ -9,7 +9,7 @@ import {
   IncidentStep,
   IncidentStepInput,
 } from "@/types/incident";
-import { PlusIcon, TrashIcon } from "@radix-ui/react-icons";
+import { ArrowRightIcon, PlusIcon, TrashIcon } from "@radix-ui/react-icons";
 import { Textarea } from "../ui/textarea";
 import {
   Select,
@@ -21,9 +21,13 @@ import {
 import { IncidentStatusIndicator } from "../global/status-indicator";
 import { useToast } from "@/lib/hooks/use-toast";
 import { colorVariants } from "@/lib/variants";
+import { useMutation } from "@tanstack/react-query";
+import { supabase } from "@/lib/supabase/client";
+import { useRouter } from "next/navigation";
 
 export default function ReportIncidentView() {
   const { toast } = useToast();
+  const router = useRouter();
 
   const [name, setName] = useState("");
   const [steps, setSteps] = useState<IncidentStepInput[]>([
@@ -32,6 +36,51 @@ export default function ReportIncidentView() {
       status: "ongoing",
     },
   ]);
+
+  const { mutate: createIncident, isPending: isCreatingIncident } = useMutation(
+    {
+      mutationKey: ["create-incident"],
+      mutationFn: async () => {
+        // First, create the incident
+        const { data: incident, error: incidentError } = await supabase
+          .from("incidents")
+          .insert({
+            name,
+          })
+          .select()
+          .single();
+
+        if (incidentError) throw incidentError;
+
+        // Then, create all steps for this incident
+        const { error: stepsError } = await supabase
+          .from("incident_steps")
+          .insert(
+            steps.map((step) => ({
+              incident_id: incident.id,
+              text: step.text,
+              status: step.status,
+            })),
+          );
+
+        if (stepsError) throw stepsError;
+
+        router.refresh();
+      },
+      onSuccess: () => {
+        toast({
+          title: "Incident created successfully",
+        });
+      },
+      onError: (error) => {
+        toast({
+          title: "Failed to create incident",
+          description: error.message,
+          variant: "destructive",
+        });
+      },
+    },
+  );
 
   const handleIncidentCreation = () => {
     if (name.length === 0) {
@@ -49,6 +98,8 @@ export default function ReportIncidentView() {
       });
       return;
     }
+
+    createIncident();
   };
 
   return (
@@ -88,9 +139,11 @@ export default function ReportIncidentView() {
               key={`step-card-${index}`}
               step={step}
               onChange={(newStep) => {
-                setSteps(
-                  steps.map((s) => (s.text === step.text ? newStep : s)),
-                );
+                const newSteps = [...steps];
+
+                newSteps[index] = newStep;
+
+                setSteps(newSteps);
               }}
               onRemove={
                 index !== 0
@@ -111,8 +164,13 @@ export default function ReportIncidentView() {
             >
               <PlusIcon /> Add Step
             </Button>
-            <Button type="submit" size="lg" onClick={handleIncidentCreation}>
-              Create Incident
+            <Button
+              type="submit"
+              size="lg"
+              onClick={handleIncidentCreation}
+              disabled={isCreatingIncident}
+            >
+              Create Incident <ArrowRightIcon className="size-4" />
             </Button>
           </div>
         </div>

@@ -1,6 +1,6 @@
 "use server";
 
-import { Incident, IncidentStep } from "@/types/incident";
+import { Incident, IncidentStep, IncidentWithSteps } from "@/types/incident";
 import { supabaseAdmin } from "@/utils/supabase/server";
 import { PostgrestResponse } from "@supabase/supabase-js";
 
@@ -8,8 +8,6 @@ interface ErrorResponse {
   type: "error";
   message: string;
 }
-
-type IncidentWithSteps = Incident & { steps: IncidentStep[] };
 
 interface GetIncidentsSuccessResponse {
   type: "success";
@@ -27,17 +25,14 @@ export const getIncidents = async (): Promise<GetIncidentsResponse> => {
         .select(
           `
           *,
-          incident_steps (*)
+          steps:incident_steps (*)
         `,
         )
-        .order("timestamp", {
-          ascending: true,
-          referencedTable: "incident_steps",
-        })
         .gte(
           "timestamp",
           new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString(),
-        );
+        )
+        .order("timestamp", { ascending: false });
 
     if (error) {
       console.error(error);
@@ -47,9 +42,15 @@ export const getIncidents = async (): Promise<GetIncidentsResponse> => {
       };
     }
 
+    // reverse steps order -> supabase nested order not working correctly
+    const incidentsWithReversedSteps = data?.map((incident) => ({
+      ...incident,
+      steps: incident.steps.reverse(),
+    }));
+
     return {
       type: "success",
-      incidents: data,
+      incidents: incidentsWithReversedSteps,
     };
   } catch (error) {
     console.error(error);
