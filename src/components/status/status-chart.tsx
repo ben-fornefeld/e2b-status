@@ -57,7 +57,7 @@ export default function LatencyChart() {
     return date.toLocaleString(undefined, {
       hour: "2-digit",
       minute: "2-digit",
-      hour12: false,
+      hour12: true,
     });
   };
 
@@ -87,7 +87,15 @@ export default function LatencyChart() {
 
         <div className="h-[400px]">
           <ResponsiveContainer className={cn("py-5 pl-3 pr-10")}>
-            <LineChart data={data}>
+            <LineChart
+              data={data}
+              margin={{
+                top: 5,
+                right: 10,
+                left: 0,
+                bottom: 30, // Add more bottom margin to accommodate angled labels
+              }}
+            >
               <XAxis
                 dataKey="timestamp"
                 tick={{ fontSize: 12, fill: "hsl(var(--muted-foreground))" }}
@@ -97,6 +105,7 @@ export default function LatencyChart() {
                 interval="preserveStartEnd"
                 minTickGap={50}
                 stroke="hsl(var(--muted-foreground))"
+                dy={10} // Optional: Adjust label position vertically if needed
               />
               <YAxis
                 domain={[0, 1500]}
@@ -124,9 +133,11 @@ export default function LatencyChart() {
                 }}
                 formatter={formatTooltip}
                 contentStyle={{
-                  backgroundColor: "hsl(var(--background-300))",
+                  backgroundColor: "hsl(var(--background-300), 0.6)",
+                  backdropFilter: "blur(8px)",
                   border: "1px solid hsl(var(--border-300))",
                   borderRadius: "16px",
+                  padding: "1rem",
                 }}
                 labelStyle={{
                   color: "hsl(var(--foreground))",
