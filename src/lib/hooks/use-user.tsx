@@ -2,21 +2,14 @@
 
 import { User } from "@supabase/supabase-auth-helpers/react";
 import { Session } from "@supabase/supabase-js";
-import { createContext, useContext, useEffect, useMemo } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { queryClient } from "@/components/global/client-providers";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { checkIsAdmin } from "@/utils/utils";
 import { supabase } from "../supabase/client";
-
-export type E2BUser = User & {
-  // should contain e2b user details
-};
 
 type UserContextType = {
   isLoading: boolean;
   session: Session | null;
-  user: E2BUser | null;
-  error: Error | null;
+  user: User | null;
   isAdmin: boolean;
 };
 
@@ -25,36 +18,13 @@ export const UserContext = createContext<UserContextType | undefined>(
 );
 
 export const CustomUserContextProvider = (props: any) => {
-  const {
-    data: session,
-    error,
-    isLoading,
-  } = useQuery({
-    queryKey: ["session"],
-    queryFn: async () => {
-      const {
-        data: { session },
-        error,
-      } = await supabase.auth.getSession();
-      if (error) throw error;
-
-      return session;
-    },
-  });
+  const [session, setSession] = useState<Session | null>(null);
 
   useEffect(() => {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event, session) => {
-      if (
-        session &&
-        (event === "SIGNED_IN" ||
-          event === "SIGNED_OUT" ||
-          event === "TOKEN_REFRESHED" ||
-          event === "USER_UPDATED")
-      ) {
-        queryClient.invalidateQueries({ queryKey: ["session"] });
-      }
+      setSession(session);
     });
     return () => {
       subscription.unsubscribe();
@@ -64,13 +34,11 @@ export const CustomUserContextProvider = (props: any) => {
 
   const value = useMemo(
     () => ({
-      isLoading,
-      error,
       session,
       user: session?.user ?? null,
       isAdmin: session?.user?.email ? checkIsAdmin(session.user.email) : false,
     }),
-    [isLoading, error, session],
+    [session],
   );
 
   return <UserContext.Provider value={value} {...props} />;

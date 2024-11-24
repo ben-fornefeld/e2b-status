@@ -3,7 +3,7 @@ import { Logo } from "./logo";
 import { Badge } from "../ui/badge";
 import { StatusIndicator } from "./status-indicator";
 import { checkOperationality } from "@/lib/actions/status-checks-api";
-import DashboardButton from "./dashboard-button";
+import AuthButton from "./auth-button";
 
 export default async function Navbar() {
   const { status } = await checkOperationality();
@@ -24,7 +24,7 @@ export default async function Navbar() {
           </Badge>
         </div>
 
-        <DashboardButton />
+        <AuthButton />
       </div>
     </nav>
   );

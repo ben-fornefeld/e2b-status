@@ -1,14 +1,9 @@
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { cn } from "@/lib/utils";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { Label } from "../ui/label";
 import { FC, useState } from "react";
-import {
-  IncidentStatus,
-  IncidentStep,
-  IncidentStepInput,
-} from "@/types/incident";
+import { IncidentStatus, IncidentStepInput } from "@/types/incident";
 import { ArrowRightIcon, PlusIcon, TrashIcon } from "@radix-ui/react-icons";
 import { Textarea } from "../ui/textarea";
 import {
@@ -24,6 +19,7 @@ import { colorVariants } from "@/lib/variants";
 import { useMutation } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
+import { revalidatePath } from "next/cache";
 
 export default function ReportIncidentView() {
   const { toast } = useToast();
@@ -41,7 +37,6 @@ export default function ReportIncidentView() {
     {
       mutationKey: ["create-incident"],
       mutationFn: async () => {
-        // First, create the incident
         const { data: incident, error: incidentError } = await supabase
           .from("incidents")
           .insert({
@@ -52,7 +47,6 @@ export default function ReportIncidentView() {
 
         if (incidentError) throw incidentError;
 
-        // Then, create all steps for this incident
         const { error: stepsError } = await supabase
           .from("incident_steps")
           .insert(
@@ -64,13 +58,13 @@ export default function ReportIncidentView() {
           );
 
         if (stepsError) throw stepsError;
-
-        router.refresh();
       },
       onSuccess: () => {
         toast({
           title: "Incident created successfully",
         });
+
+        router.refresh();
       },
       onError: (error) => {
         toast({

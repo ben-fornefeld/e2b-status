@@ -85,14 +85,14 @@ export default function LatencyChart() {
           </SelectContent>
         </Select>
 
-        <div className="h-[400px]">
+        <div className="h-[30dvh]">
           <ResponsiveContainer className={cn("py-5 pl-3 pr-10")}>
             <LineChart
               data={data}
               margin={{
                 top: 5,
                 right: 10,
-                left: 0,
+                left: 5,
                 bottom: 30, // Add more bottom margin to accommodate angled labels
               }}
             >

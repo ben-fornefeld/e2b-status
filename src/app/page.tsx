@@ -1,6 +1,6 @@
 import IncidentsList from "@/components/incidents/incidents-list";
 import StatusChart from "@/components/status/status-chart";
-import { Button } from "@/components/ui/button";
+import { Alert } from "@/components/ui/alert";
 import { getIncidents } from "@/lib/actions/incidents-api";
 import { getStatusChecks } from "@/lib/actions/status-checks-api";
 import { StatusDataProvider } from "@/lib/hooks/use-status-data";
@@ -14,7 +14,7 @@ export default async function Index() {
   const incidentRes = await getIncidents();
 
   if (statusCheckRes.type === "error" || incidentRes.type === "error") {
-    return <div>Error fetching data</div>;
+    return <Alert variant="destructive">Error fetching data</Alert>;
   }
 
   return (
