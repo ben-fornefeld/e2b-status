@@ -70,23 +70,22 @@ export default function LatencyChart() {
 
   return (
     <div className="flex flex-col gap-8">
-      <h2 className="text-2xl">Sandbox Latency</h2>
+      <h2 className="text-2xl">Latency</h2>
       <div className="w-full space-y-4">
-        <Select value={timeRange} onValueChange={setTimeRange}>
-          <SelectTrigger className="w-[150px]">
-            <SelectValue placeholder="Select time range" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="1h">Last Hour</SelectItem>
-            <SelectItem value="6h">Last 6 Hours</SelectItem>
-            <SelectItem value="24h">Last 24 Hours</SelectItem>
-            <SelectItem value="7d">Last 7 Days</SelectItem>
-            <SelectItem value="30d">Last 30 Days</SelectItem>
-          </SelectContent>
-        </Select>
-
-        <div className="h-[30dvh]">
-          <ResponsiveContainer className={cn("py-5 pl-3 pr-10")}>
+        <div className="relative h-[24dvh]">
+          <Select value={timeRange} onValueChange={setTimeRange}>
+            <SelectTrigger className="absolute right-10 top-4 z-10 w-[140px]">
+              <SelectValue placeholder="Select time range" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="1h">Last Hour</SelectItem>
+              <SelectItem value="6h">Last 6 Hours</SelectItem>
+              <SelectItem value="24h">Last 24 Hours</SelectItem>
+              <SelectItem value="7d">Last 7 Days</SelectItem>
+              <SelectItem value="30d">Last 30 Days</SelectItem>
+            </SelectContent>
+          </Select>
+          <ResponsiveContainer className="py-5 pl-3 pr-10">
             <LineChart
               data={data}
               margin={{
