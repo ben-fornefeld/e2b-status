@@ -18,6 +18,9 @@ export default function AuthButton() {
     } else {
       await supabase.auth.signInWithOAuth({
         provider: "github",
+        options: {
+          redirectTo: process.env.NEXT_PUBLIC_BASE_URL,
+        },
       });
     }
   }, [user]);
