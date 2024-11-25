@@ -12,10 +12,13 @@ type IncidentWithSteps = Incident & { steps: IncidentStep[] };
 type StatusData = {
   statusChecks: StatusCheck[];
   incidents: IncidentWithSteps[];
+};
+
+type StatusDataContext = StatusData & {
   setIncidents: (incidents: IncidentWithSteps[]) => void;
 };
 
-export const StatusDataContext = createContext<StatusData>({
+export const StatusDataContext = createContext<StatusDataContext>({
   statusChecks: [],
   incidents: [],
   setIncidents: () => {},
@@ -28,7 +31,6 @@ export const StatusDataProvider = ({
   children: React.ReactNode;
   initialData: StatusData;
 }) => {
-  // could be stored in refs since these dont change atm
   const [incidents, setIncidents] = useState<IncidentWithSteps[]>(
     initialData.incidents,
   );
