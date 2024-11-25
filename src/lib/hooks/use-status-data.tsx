@@ -12,6 +12,7 @@ type IncidentWithSteps = Incident & { steps: IncidentStep[] };
 type StatusData = {
   statusChecks: StatusCheck[];
   incidents: IncidentWithSteps[];
+  uptime: number[];
 };
 
 type StatusDataContext = StatusData & {
@@ -22,6 +23,7 @@ export const StatusDataContext = createContext<StatusDataContext>({
   statusChecks: [],
   incidents: [],
   setIncidents: () => {},
+  uptime: [],
 });
 
 export const StatusDataProvider = ({
@@ -34,11 +36,15 @@ export const StatusDataProvider = ({
   const [incidents, setIncidents] = useState<IncidentWithSteps[]>(
     initialData.incidents,
   );
-  const [statusChecks] = useState<StatusCheck[]>(initialData.statusChecks);
 
   return (
     <StatusDataContext.Provider
-      value={{ incidents, statusChecks, setIncidents }}
+      value={{
+        incidents,
+        setIncidents,
+        statusChecks: initialData.statusChecks,
+        uptime: initialData.uptime,
+      }}
     >
       {children}
     </StatusDataContext.Provider>

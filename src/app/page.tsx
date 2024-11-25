@@ -1,8 +1,9 @@
 import IncidentsList from "@/components/incidents/incidents-list";
 import StatusChart from "@/components/status/status-chart";
 import { Alert } from "@/components/ui/alert";
+import UptimeCard from "@/components/uptime/uptime-card";
 import { getIncidents } from "@/lib/actions/incidents-api";
-import { getStatusChecks } from "@/lib/actions/status-checks-api";
+import { getStatusChecks, getUptime } from "@/lib/actions/status-checks-api";
 import { StatusDataProvider } from "@/lib/hooks/use-status-data";
 
 // disable caching for this page to ensure we always get the latest data
@@ -13,7 +14,14 @@ export default async function Index() {
 
   const incidentRes = await getIncidents();
 
-  if (statusCheckRes.type === "error" || incidentRes.type === "error") {
+  const uptimeRes = await getUptime();
+
+  // TODO: handle errors in component locations
+  if (
+    statusCheckRes.type === "error" ||
+    incidentRes.type === "error" ||
+    uptimeRes.type === "error"
+  ) {
     return <Alert variant="destructive">Error fetching data</Alert>;
   }
 
@@ -22,12 +30,15 @@ export default async function Index() {
       initialData={{
         statusChecks: statusCheckRes.status_checks,
         incidents: incidentRes.incidents,
+        uptime: uptimeRes.uptime,
       }}
     >
       {/* h1 only present for SEO purposes */}
       <h1 className="sr-only">Current Api Status</h1>
-      <div className="py-12">
+      <div className="flex flex-col gap-6 py-12">
         <StatusChart />
+
+        <UptimeCard />
 
         <IncidentsList />
       </div>

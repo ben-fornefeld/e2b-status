@@ -76,7 +76,7 @@ export default function IncidentsList() {
   return (
     <div className="mt-12">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl">Recent Incidents</h2>
+        <h2 className="text-2xl">Past Incidents</h2>
         {isAdmin && (
           <div className="flex items-center gap-2">
             <AnimatePresence initial={false}>

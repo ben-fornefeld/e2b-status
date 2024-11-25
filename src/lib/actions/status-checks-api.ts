@@ -25,7 +25,7 @@ export const getStatusChecks = async (): Promise<GetStatusChecksResponse> => {
       .select("*")
       .gte(
         "timestamp",
-        new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
+        new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
       );
 
     if (error) {
@@ -108,3 +108,83 @@ export const checkOperationality =
       };
     }
   };
+
+interface GetUptimeSuccessResponse {
+  type: "success";
+  uptime: number[];
+}
+
+type GetUptimeResponse = ErrorResponse | GetUptimeSuccessResponse;
+
+const UPTIME_DAYS = 90;
+
+export const getUptime = async (): Promise<GetUptimeResponse> => {
+  try {
+    const { data, error }: PostgrestResponse<StatusCheck> = await supabaseAdmin
+      .from("status_checks")
+      .select("*")
+      .gte(
+        "timestamp",
+        new Date(Date.now() - UPTIME_DAYS * 24 * 60 * 60 * 1000).toISOString(),
+      )
+      .order("timestamp", { ascending: false });
+
+    if (error) {
+      throw error;
+    }
+
+    if (!data || data.length === 0) {
+      // fill 100% uptime for all days if no data
+      return {
+        type: "success",
+        uptime: Array(UPTIME_DAYS).fill(100),
+      };
+    }
+
+    const dates = Array.from({ length: UPTIME_DAYS }, (_, i) => {
+      const date = new Date();
+      date.setDate(date.getDate() - (UPTIME_DAYS - 1 - i));
+      return date.toISOString().split("T")[0];
+    });
+
+    // group checks by day
+    const dailyChecks = data.reduce(
+      (acc, check) => {
+        const day = new Date(check.timestamp).toISOString().split("T")[0];
+        if (!acc[day]) {
+          acc[day] = [];
+        }
+        acc[day].push(check);
+        return acc;
+      },
+      {} as Record<string, StatusCheck[]>,
+    );
+
+    // percentage calculations
+    const uptimeArray = dates.map((date) => {
+      const checks = dailyChecks[date] || [];
+      if (checks.length === 0) {
+        return 100;
+      }
+
+      const failures = checks.filter(
+        (check) => check.http_status !== 201,
+      ).length;
+      const uptimePercentage =
+        ((checks.length - failures) / checks.length) * 100;
+
+      return Math.round(uptimePercentage * 100) / 100;
+    });
+
+    return {
+      type: "success",
+      uptime: uptimeArray,
+    };
+  } catch (error) {
+    console.error(error);
+    return {
+      type: "error",
+      message: "Failed to calculate uptime",
+    };
+  }
+};

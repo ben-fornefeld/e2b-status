@@ -11,7 +11,7 @@ const Card = React.forwardRef<
     ref={ref}
     className={cn(
       colorVariants({ variant: "surfaceGradient" }),
-      "rounded-xl text-foreground shadow-sm",
+      "rounded-2xl text-foreground shadow-sm",
       className,
     )}
     {...props}
