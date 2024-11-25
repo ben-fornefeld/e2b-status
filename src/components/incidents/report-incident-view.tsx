@@ -3,7 +3,7 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { Label } from "../ui/label";
 import { FC, useState } from "react";
-import { IncidentStatus, IncidentStepInput } from "@/types/incident";
+import { IncidentStatus, IncidentStep } from "@/types/incident";
 import { ArrowRightIcon, PlusIcon, TrashIcon } from "@radix-ui/react-icons";
 import { Textarea } from "../ui/textarea";
 import {
@@ -17,16 +17,15 @@ import { IncidentStatusIndicator } from "../global/status-indicator";
 import { useToast } from "@/lib/hooks/use-toast";
 import { colorVariants } from "@/lib/variants";
 import { useMutation } from "@tanstack/react-query";
-import { supabase } from "@/lib/supabase/client";
+import { supabase } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
-import { revalidatePath } from "next/cache";
 
 export default function ReportIncidentView() {
   const { toast } = useToast();
   const router = useRouter();
 
   const [name, setName] = useState("");
-  const [steps, setSteps] = useState<IncidentStepInput[]>([
+  const [steps, setSteps] = useState<Pick<IncidentStep, "text" | "status">[]>([
     {
       text: "",
       status: "ongoing",
@@ -174,8 +173,8 @@ export default function ReportIncidentView() {
 }
 
 const IncidentStepComp: FC<{
-  step: IncidentStepInput;
-  onChange: (step: IncidentStepInput) => void;
+  step: Pick<IncidentStep, "text" | "status">;
+  onChange: (step: Pick<IncidentStep, "text" | "status">) => void;
   onRemove?: () => void;
 }> = ({ step, onChange, onRemove }) => {
   return (

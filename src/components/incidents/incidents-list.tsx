@@ -5,21 +5,32 @@ import { IncidentCard } from "./incident-card";
 import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 import { Button } from "../ui/button";
 import { useUser } from "@/lib/hooks/use-user";
-import { CalendarIcon, Cross1Icon } from "@radix-ui/react-icons";
-import { useState, useLayoutEffect } from "react";
-import { AnimatePresence } from "framer-motion";
-import ReportIncidentView from "./report-incident-view";
-import { motion } from "framer-motion";
-import { exponentialEaseInOut } from "@/utils/utils";
+import { CalendarIcon } from "@radix-ui/react-icons";
+import { useState, useLayoutEffect, useMemo } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { exponentialEasing } from "@/utils/utils";
 import { neonVariants } from "@/lib/variants";
-import { cn } from "@/lib/utils";
+import { IncidentSchema, IncidentWithSteps } from "@/types/incident";
+import { isEqual } from "@/lib/utils";
+import useSaveIncidents from "@/lib/hooks/use-save-incidents";
 
 export default function IncidentsList() {
   const { incidents } = useStatusData();
   const { isAdmin } = useUser();
 
   const [formattedDate, setFormattedDate] = useState<string>("");
-  const [isReportIncidentOpen, setIsReportIncidentOpen] = useState(false);
+
+  const [localIncidents, setLocalIncidents] = useState(incidents);
+
+  const hasUnsavedChanges = useMemo(
+    () => !isEqual(localIncidents, incidents),
+    [localIncidents, incidents],
+  );
+
+  const { mutate: saveChanges, isPending: savingChanges } = useSaveIncidents(
+    incidents,
+    localIncidents,
+  );
 
   useLayoutEffect(() => {
     // format date on client-side only to prevent hydration issues
@@ -33,74 +44,75 @@ export default function IncidentsList() {
     );
   }, []);
 
+  useLayoutEffect(() => {
+    setLocalIncidents(incidents);
+  }, [incidents]);
+
+  const handleIncidentUpdate = (updatedIncident: IncidentWithSteps) => {
+    setLocalIncidents((prev) =>
+      prev.map((inc) =>
+        inc.id === updatedIncident.id ? updatedIncident : inc,
+      ),
+    );
+  };
+
+  const handleIncidentDelete = (incident: IncidentWithSteps) => {
+    setLocalIncidents((prev) => prev.filter((inc) => inc.id !== incident.id));
+  };
+
+  const handleAddIncident = () => {
+    const newIncident = {
+      ...IncidentSchema.parse({
+        name: "",
+        description: "",
+        timestamp: new Date().toISOString(),
+      }),
+      steps: [],
+    };
+
+    setLocalIncidents((prev) => [newIncident, ...prev]);
+  };
+
   return (
     <div className="mt-12">
-      <AnimatePresence>
-        {isReportIncidentOpen && (
-          <motion.div
-            initial={{
-              opacity: 0,
-              height: 0,
-              y: 5,
-              marginBottom: 0,
-              scale: 0.95,
-            }}
-            animate={{
-              opacity: 1,
-              height: "auto",
-              y: 0,
-              scale: 1,
-              marginBottom: "2.5rem",
-            }}
-            exit={{
-              opacity: 0,
-              height: 0,
-              y: -5,
-              marginBottom: 0,
-              scale: 0.95,
-            }}
-            transition={{
-              duration: 0.2,
-              ease: (t) => exponentialEaseInOut(t),
-              height: {
-                duration: 0.3,
-              },
-              marginTop: {
-                duration: 0.5,
-              },
-            }}
-            style={{ overflow: "hidden" }}
-          >
-            <ReportIncidentView />
-          </motion.div>
-        )}
-      </AnimatePresence>
-
       <div className="flex items-center justify-between">
         <h2 className="text-2xl">Recent Incidents</h2>
         {isAdmin && (
-          <Button
-            onClick={() => setIsReportIncidentOpen(!isReportIncidentOpen)}
-            className={
-              isReportIncidentOpen
-                ? cn(neonVariants({ neon: "gray" }), "opacity-60")
-                : undefined
-            }
-          >
-            <AnimatePresence mode="popLayout" initial={false}>
-              <motion.div
-                key={isReportIncidentOpen ? "close" : "open"}
-                initial={{ opacity: 0, y: 5 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -5 }}
-                transition={{ duration: 0.2, ease: "easeInOut" }}
-                className="size-4"
-              >
-                {isReportIncidentOpen ? <Cross1Icon /> : <CalendarIcon />}
-              </motion.div>
+          <div className="flex items-center gap-2">
+            <AnimatePresence initial={false}>
+              {hasUnsavedChanges && (
+                <motion.div
+                  variants={{
+                    hidden: { opacity: 0, x: 10 },
+                    visible: { opacity: 1, x: 0 },
+                  }}
+                  transition={{
+                    duration: 0.2,
+                    ease: (t) => exponentialEasing(t),
+                  }}
+                  className="sticky top-0"
+                  initial="hidden"
+                  animate="visible"
+                  exit="hidden"
+                >
+                  <Button
+                    variant="surfaceGradient"
+                    onClick={() => saveChanges()}
+                    disabled={savingChanges}
+                  >
+                    {savingChanges ? "Saving..." : "Save Changes"}
+                  </Button>
+                </motion.div>
+              )}
             </AnimatePresence>
-            Report Incident
-          </Button>
+            <Button
+              onClick={handleAddIncident}
+              className={neonVariants({ neon: "gray" })}
+            >
+              <CalendarIcon />
+              Report Incident
+            </Button>
+          </div>
         )}
       </div>
 
@@ -113,8 +125,17 @@ export default function IncidentsList() {
             </AlertDescription>
           </Alert>
         )}
-        {incidents.map((incident) => (
-          <IncidentCard key={incident.id} incident={incident} />
+        {localIncidents.map((incident) => (
+          <IncidentCard
+            key={incident.id}
+            incident={incident}
+            onUpdate={(updatedIncident) => {
+              handleIncidentUpdate(updatedIncident);
+            }}
+            onDelete={() => {
+              handleIncidentDelete(incident);
+            }}
+          />
         ))}
       </div>
     </div>

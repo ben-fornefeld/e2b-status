@@ -4,7 +4,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { Button } from "../ui/button";
-import { supabase } from "@/lib/supabase/client";
+import { supabase } from "@/utils/supabase/client";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import { useCallback } from "react";
 import { useUser } from "@/lib/hooks/use-user";
