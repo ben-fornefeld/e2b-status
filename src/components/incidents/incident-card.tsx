@@ -183,14 +183,16 @@ export const IncidentCard = ({
                   placeholder="Describe the current status..."
                 />
               </CardContent>
-              <Button
-                variant="darkGradient"
-                size="icon"
-                className={cn("absolute right-2 top-2 size-7 rounded-full")}
-                onClick={() => handleDeleteStep(step.id)}
-              >
-                <TrashIcon className="size-4" />
-              </Button>
+              {isAdmin && (
+                <Button
+                  variant="darkGradient"
+                  size="icon"
+                  className={cn("absolute right-2 top-2 size-7 rounded-full")}
+                  onClick={() => handleDeleteStep(step.id)}
+                >
+                  <TrashIcon className="size-4" />
+                </Button>
+              )}
             </Card>
           </div>
         ))}
