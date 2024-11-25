@@ -35,7 +35,7 @@ export default async function Index() {
     >
       {/* h1 only present for SEO purposes */}
       <h1 className="sr-only">Current Api Status</h1>
-      <div className="flex flex-col gap-6 py-12">
+      <div className="flex flex-col gap-6 pb-24 pt-10">
         <StatusChart />
 
         <UptimeCard />

@@ -17,7 +17,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useState, useMemo, useCallback } from "react";
-import { cn } from "@/lib/utils";
 
 export default function LatencyChart() {
   const [timeRange, setTimeRange] = useState("1h");
@@ -69,7 +68,7 @@ export default function LatencyChart() {
   };
 
   return (
-    <div className="flex flex-col gap-8">
+    <div className="flex flex-col gap-6">
       <h2 className="text-2xl">Latency</h2>
       <div className="w-full space-y-4">
         <div className="relative h-[24dvh]">
