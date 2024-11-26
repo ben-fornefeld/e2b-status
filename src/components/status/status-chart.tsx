@@ -123,10 +123,10 @@ export default function LatencyChart() {
           </p>
         </div>
         <Select value={timeRange} onValueChange={setTimeRange}>
-          <SelectTrigger className="z-10 w-[140px]">
+          <SelectTrigger className="z-10 w-[160px]">
             <SelectValue placeholder="Select time range" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent position="popper">
             <SelectItem value="1h">Last Hour</SelectItem>
             <SelectItem value="6h">Last 6 Hours</SelectItem>
             <SelectItem value="24h">Last 24 Hours</SelectItem>
