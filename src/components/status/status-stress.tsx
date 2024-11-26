@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import { colorVariants } from "@/lib/variants";
 import { motion, AnimatePresence } from "framer-motion";
 import { LightningBoltIcon, PlayIcon } from "@radix-ui/react-icons";
+import { STRESS_TEST_COUNT } from "@/config/stress-test-config";
 
 export default function StatusStress() {
   const [isFetching, setIsFetching] = useState(false);
@@ -50,7 +51,7 @@ export default function StatusStress() {
     return (
       data
         .map((check, i) => {
-          const angle = (i * 2 * Math.PI) / 100;
+          const angle = (i * 2 * Math.PI) / STRESS_TEST_COUNT;
           const normalizedResponse = Math.min(check.response_time_ms / 1500, 1);
           const spikeHeight = normalizedResponse * maxHeight;
           const radius = baseRadius + spikeHeight;
@@ -60,7 +61,7 @@ export default function StatusStress() {
 
           return `${i === 0 ? "M" : "L"} ${x} ${y}`;
         })
-        .join(" ") + (data.length === 100 ? " Z" : "")
+        .join(" ") + (data.length === STRESS_TEST_COUNT ? " Z" : "")
     );
   };
 
@@ -83,8 +84,8 @@ export default function StatusStress() {
           >
             code
           </span>{" "}
-          in a <span className="text-foreground">python</span> sandbox 100
-          times.
+          in a <span className="text-foreground">python</span> sandbox{" "}
+          <span className="text-foreground">{STRESS_TEST_COUNT}</span> times.
         </p>
       </div>
 
@@ -116,7 +117,7 @@ export default function StatusStress() {
         >
           <div className="relative h-[300px] w-full">
             <svg viewBox="0 0 300 300" className="h-full w-full">
-              <circle
+              <motion.circle
                 cx="150"
                 cy="150"
                 r="100"
@@ -124,9 +125,17 @@ export default function StatusStress() {
                 stroke="hsl(var(--muted-foreground))"
                 strokeWidth="1"
                 opacity="0.2"
+                initial={{ pathLength: 0 }}
+                animate={{ pathLength: 1 }}
+                transition={{ duration: 1, ease: "easeInOut" }}
               />
 
               <motion.path
+                key={
+                  checks.length === STRESS_TEST_COUNT
+                    ? "stress-test-path-full"
+                    : undefined
+                }
                 d={generateCircularPath(checks)}
                 fill="none"
                 stroke="url(#responseTimeGradient)"

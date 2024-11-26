@@ -1,8 +1,7 @@
+import { STRESS_TEST_COUNT } from "@/config/stress-test-config";
 import Sandbox from "@e2b/code-interpreter";
 
 export const runtime = "edge";
-
-const API_TEST_COUNT = 100;
 
 async function runCheck(sandbox: Sandbox) {
   const startTime = Date.now();
@@ -25,7 +24,7 @@ export async function GET() {
     const stream = new ReadableStream({
       async start(controller) {
         try {
-          for (let i = 0; i < API_TEST_COUNT; i++) {
+          for (let i = 0; i < STRESS_TEST_COUNT; i++) {
             const result = await runCheck(sandbox);
             controller.enqueue(encoder.encode(JSON.stringify(result) + "\n"));
           }
