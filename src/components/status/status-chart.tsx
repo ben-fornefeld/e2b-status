@@ -84,6 +84,12 @@ export default function LatencyChart() {
     return filterDataByTimeRange(mappedData, timeRange);
   }, [statusChecks, timeRange]);
 
+  const maxDomain = useMemo(() => {
+    if (data.length === 0) return 1500;
+    const maxValue = Math.max(...data.map((d) => d.responseTime));
+    return Math.ceil(maxValue + 700);
+  }, [data]);
+
   const formatXAxis = (timestamp: string) => {
     const date = new Date(timestamp);
     if (timeRange === "7d" || timeRange === "30d") {
@@ -151,7 +157,7 @@ export default function LatencyChart() {
                 dy={10}
               />
               <YAxis
-                domain={[0, 1500]}
+                domain={[0, maxDomain]}
                 tick={{ fill: "hsl(var(--muted-foreground))" }}
                 tickFormatter={(value) => `${(value / 1000).toFixed(1)}s`}
                 label={{
