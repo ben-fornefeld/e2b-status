@@ -73,7 +73,7 @@ export default function LatencyChart() {
       <div className="w-full space-y-4">
         <div className="relative h-[24dvh]">
           <Select value={timeRange} onValueChange={setTimeRange}>
-            <SelectTrigger className="absolute right-10 top-4 z-10 w-[140px]">
+            <SelectTrigger className="absolute right-0 top-0 z-10 w-[140px] md:right-10 md:top-4">
               <SelectValue placeholder="Select time range" />
             </SelectTrigger>
             <SelectContent>
@@ -84,7 +84,7 @@ export default function LatencyChart() {
               <SelectItem value="30d">Last 30 Days</SelectItem>
             </SelectContent>
           </Select>
-          <ResponsiveContainer className="py-5 pl-3 pr-10">
+          <ResponsiveContainer className="md:py-5 md:pl-3 md:pr-10">
             <LineChart
               data={data}
               margin={{
@@ -108,8 +108,9 @@ export default function LatencyChart() {
               <YAxis
                 domain={[0, 1500]}
                 tick={{ fill: "hsl(var(--muted-foreground))" }}
+                tickFormatter={(value) => `${(value / 1000).toFixed(1)}s`}
                 label={{
-                  value: "Response Time (ms)",
+                  value: "Response Time (s)",
                   angle: -90,
                   fill: "hsl(var(--muted-foreground))",
                   fontSize: 12,

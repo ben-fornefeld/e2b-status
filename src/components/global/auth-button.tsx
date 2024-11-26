@@ -48,7 +48,7 @@ export default function AuthButton() {
         ) : (
           <GitHubLogoIcon />
         )}
-        <span>{user ? "Sign Out" : "Sign In using GitHub"}</span>
+        <span>{user ? "Sign Out" : "Sign In"}</span>
         <ArrowRight className="h-4 w-4" />
       </Button>
     </motion.div>

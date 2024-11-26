@@ -5,19 +5,29 @@ import { cn } from "@/lib/utils";
 import { CaretUpIcon } from "@radix-ui/react-icons";
 import { colorVariants, neonVariants } from "@/lib/variants";
 import { motion } from "framer-motion";
-import { exponentialEaseInOut, exponentialEasing } from "@/utils/utils";
-import { AnimatePresence, LayoutGroup } from "framer-motion";
+import { exponentialEaseInOut } from "@/utils/utils";
+import { AnimatePresence } from "framer-motion";
 import { useState } from "react";
+import { useBreakpoint } from "use-breakpoint";
 
 function UptimeCard() {
   const { uptime } = useStatusData();
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
+  const { breakpoint } = useBreakpoint({
+    xs: 0,
+    sm: 640,
+    md: 768,
+  });
+
+  const displayedUptime = uptime.slice(-(breakpoint === "xs" ? 60 : 90));
+
   const averageUptime =
-    uptime.reduce((acc, curr) => acc + curr, 0) / uptime.length;
+    displayedUptime.reduce((acc, curr) => acc + curr, 0) /
+    displayedUptime.length;
 
   return (
-    <div className={cn("w-full space-y-4 px-10")}>
+    <div className={cn("w-full space-y-4 sm:px-10")}>
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className={cn(neonVariants({ neon: "green" }), "rounded-full")}>
@@ -56,16 +66,16 @@ function UptimeCard() {
                   "text-x absolute bottom-full mb-2 rounded-md px-2 py-1",
                 )}
                 style={{
-                  left: `${(hoveredIndex / uptime.length) * 100}%`,
+                  left: `${(hoveredIndex / displayedUptime.length) * 100}%`,
                   transform: "translateX(-50%)",
                 }}
               >
-                {uptime[hoveredIndex].toFixed(2)}%
+                {displayedUptime[hoveredIndex].toFixed(2)}%
               </motion.div>
             )}
           </AnimatePresence>
 
-          {uptime.map((value, index) => (
+          {displayedUptime.map((value, index) => (
             <motion.div
               key={index}
               variants={{
@@ -90,7 +100,7 @@ function UptimeCard() {
       </div>
 
       <div className="flex justify-between text-sm text-muted-foreground">
-        <span>{uptime.length} days ago</span>
+        <span>{displayedUptime.length} days ago</span>
         <span>Today</span>
       </div>
     </div>

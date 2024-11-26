@@ -74,8 +74,8 @@ export default function IncidentsList() {
   };
 
   return (
-    <div className="mt-12">
-      <div className="flex items-center justify-between">
+    <div className="mt-8 md:mt-12">
+      <div className="flex justify-between max-md:flex-col max-md:gap-2 md:items-center">
         <h2 className="text-2xl">Past Incidents</h2>
         {isAdmin && (
           <div className="flex items-center gap-2">

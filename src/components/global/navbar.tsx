@@ -16,7 +16,7 @@ export default async function Navbar() {
             <Logo />
           </Link>
 
-          <Badge variant="surface">
+          <Badge variant="surface" className="hidden sm:inline-flex">
             <StatusIndicator status={status} />{" "}
             {status === "operational"
               ? "All Systems Operational"
@@ -26,6 +26,16 @@ export default async function Navbar() {
 
         <AuthButton />
       </div>
+
+      <Badge
+        variant="dark"
+        className="absolute bottom-0 left-2 inline-flex translate-y-5 sm:hidden"
+      >
+        <StatusIndicator status={status} />{" "}
+        {status === "operational"
+          ? "All Systems Operational"
+          : "Some Systems Degraded"}
+      </Badge>
     </nav>
   );
 }

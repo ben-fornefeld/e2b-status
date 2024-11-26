@@ -6,7 +6,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Separator } from "../ui/separator";
 import { Badge } from "../ui/badge";
-import { cn, isEqual } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import { neonVariants } from "@/lib/variants";
 import {
   CheckIcon,
@@ -15,11 +15,8 @@ import {
   TrashIcon,
 } from "@radix-ui/react-icons";
 import { Button } from "../ui/button";
-import { useMemo } from "react";
 import { useUser } from "@/lib/hooks/use-user";
 import { SlateInput, SlateTextarea } from "../global/slate-input";
-import { AnimatePresence, motion } from "framer-motion";
-import { exponentialEasing } from "@/utils/utils";
 
 interface IncidentCardProps {
   incident: IncidentWithSteps;
@@ -148,9 +145,6 @@ export const IncidentCard = ({
                   <Cross1Icon className="size-4" />
                 )}
               </button>
-              {/* {index !== incident.steps.length - 1 && (
-                <div className="h-full w-0.5 bg-border" />
-              )} */}
             </div>
             <Card className="relative w-full">
               <CardHeader className="p-3">
