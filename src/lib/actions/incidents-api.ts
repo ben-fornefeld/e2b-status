@@ -42,15 +42,18 @@ export const getIncidents = async (): Promise<GetIncidentsResponse> => {
       };
     }
 
-    // reverse steps order -> supabase nested order not working correctly
-    const incidentsWithReversedSteps = data?.map((incident) => ({
+    // sort manually to ensure correct order (supabase nested order not working correctly)
+    const incidentsWithSortedSteps = data?.map((incident) => ({
       ...incident,
-      steps: incident.steps.reverse(),
+      steps: incident.steps.sort(
+        (a, b) =>
+          new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime(),
+      ),
     }));
 
     return {
       type: "success",
-      incidents: incidentsWithReversedSteps,
+      incidents: incidentsWithSortedSteps,
     };
   } catch (error) {
     console.error(error);

@@ -153,6 +153,7 @@ export default function useSaveIncidents(
           change.type,
         ),
       );
+
       const stepOps = changes.filter((change) =>
         [
           "add-incident-step",
