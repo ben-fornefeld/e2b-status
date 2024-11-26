@@ -30,14 +30,6 @@ export const getStatusChecks = async (): Promise<GetStatusChecksResponse> => {
       .order("timestamp", { ascending: true })
       .limit(10000);
 
-    console.log("API Query:", {
-      now: now.toISOString(),
-      thirtyDaysAgo: thirtyDaysAgo.toISOString(),
-      firstRecord: data?.[0]?.timestamp,
-      lastRecord: data?.[data.length - 1]?.timestamp,
-      recordCount: data?.length,
-    });
-
     if (error) {
       console.error(error);
       return {

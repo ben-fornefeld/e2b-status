@@ -64,19 +64,6 @@ export default function LatencyChart() {
 
     const cutoff = new Date(latestDataPoint.getTime() - ranges[range]);
 
-    console.log("Filtering data:", {
-      range,
-      latestDataPoint: latestDataPoint.toISOString(),
-      cutoff: cutoff.toISOString(),
-      totalDataPoints: data.length,
-      firstDataPoint: data[0]?.timestamp,
-      lastDataPoint: data[data.length - 1]?.timestamp,
-      samplePoints: data.slice(0, 3).map((d) => ({
-        original: d.timestamp,
-        parsed: new Date(d.timestamp).toISOString(),
-      })),
-    });
-
     const filtered = data.filter((item) => {
       const itemTime = new Date(item.timestamp).getTime();
       return itemTime > cutoff.getTime();
@@ -101,6 +88,12 @@ export default function LatencyChart() {
 
   const formatXAxis = (timestamp: string) => {
     const date = new Date(timestamp);
+    if (timeRange === "7d" || timeRange === "30d") {
+      return date.toLocaleDateString(undefined, {
+        month: "short",
+        day: "numeric",
+      });
+    }
     return date.toTimeString().split(" ")[0];
   };
 
