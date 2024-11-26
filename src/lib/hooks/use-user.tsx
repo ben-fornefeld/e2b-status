@@ -3,7 +3,7 @@
 import { User } from "@supabase/supabase-auth-helpers/react";
 import { Session } from "@supabase/supabase-js";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
-import { checkIsAdmin } from "@/utils/utils";
+import { checkIsAdmin } from "@/lib/utils";
 import { supabase } from "@/utils/supabase/client";
 
 type UserContextType = {

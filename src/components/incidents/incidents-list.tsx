@@ -8,7 +8,7 @@ import { useUser } from "@/lib/hooks/use-user";
 import { CalendarIcon } from "@radix-ui/react-icons";
 import { useState, useLayoutEffect, useMemo } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { exponentialEasing } from "@/utils/utils";
+import { exponentialEasing } from "@/lib/utils";
 import { neonVariants } from "@/lib/variants";
 import { IncidentSchema, IncidentWithSteps } from "@/types/incident";
 import { isEqual } from "@/lib/utils";

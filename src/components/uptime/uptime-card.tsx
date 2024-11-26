@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 import { CaretUpIcon } from "@radix-ui/react-icons";
 import { colorVariants, neonVariants } from "@/lib/variants";
 import { motion } from "framer-motion";
-import { exponentialEaseInOut } from "@/utils/utils";
+import { exponentialEaseInOut } from "@/lib/utils";
 import { AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { useBreakpoint } from "use-breakpoint";
