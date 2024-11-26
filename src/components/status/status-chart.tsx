@@ -108,7 +108,7 @@ export default function LatencyChart() {
     <div className="flex flex-col gap-6">
       <h2 className="text-2xl">Latency</h2>
       <div className="w-full space-y-4">
-        <div className="relative h-[24dvh]">
+        <div className="relative h-[200px] md:h-[260px]">
           <Select value={timeRange} onValueChange={setTimeRange}>
             <SelectTrigger className="absolute right-0 top-0 z-10 w-[140px] md:right-10 md:top-4">
               <SelectValue placeholder="Select time range" />
