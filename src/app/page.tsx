@@ -1,5 +1,6 @@
 import IncidentsList from "@/components/incidents/incidents-list";
 import StatusChart from "@/components/status/status-chart";
+import StatusStress from "@/components/status/status-stress";
 import { Alert } from "@/components/ui/alert";
 import UptimeCard from "@/components/uptime/uptime-card";
 import { getIncidents } from "@/lib/actions/incidents-api";
@@ -36,6 +37,8 @@ export default async function Index() {
       {/* h1 only present for SEO purposes */}
       <h1 className="sr-only">Current Api Status</h1>
       <div className="flex flex-col gap-6 pb-24 pt-8 sm:pt-10">
+        <StatusStress />
+
         <StatusChart />
 
         <UptimeCard />

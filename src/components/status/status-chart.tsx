@@ -109,7 +109,12 @@ export default function LatencyChart() {
 
   return (
     <div className="flex flex-col gap-6">
-      <h2 className="text-2xl">Latency</h2>
+      <div className="flex flex-col gap-2">
+        <h2 className="text-2xl">Latency</h2>
+        <p className="text-md text-muted-foreground">
+          How fast we create your Sandboxes.
+        </p>
+      </div>
       <div className="w-full space-y-4">
         <div className="relative h-[200px] md:h-[260px]">
           <Select value={timeRange} onValueChange={setTimeRange}>
