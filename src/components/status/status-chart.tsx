@@ -16,7 +16,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo } from "react";
 
 export default function LatencyChart() {
   const [timeRange, setTimeRange] = useState("1h");
@@ -24,7 +24,6 @@ export default function LatencyChart() {
 
   const filterDataByTimeRange = (data: any[], range: string) => {
     const now = new Date();
-    const utcNow = new Date(now.getTime() + now.getTimezoneOffset() * 60000);
     const ranges: { [key: string]: number } = {
       "1h": 60 * 60 * 1000,
       "6h": 6 * 60 * 60 * 1000,
@@ -32,10 +31,8 @@ export default function LatencyChart() {
       "7d": 7 * 24 * 60 * 60 * 1000,
       "30d": 30 * 24 * 60 * 60 * 1000,
     };
-    const cutoff = new Date(utcNow.getTime() - ranges[range]);
-    return data.filter(
-      (item) => new Date(item.timestamp).getTime() > cutoff.getTime(),
-    );
+    const cutoff = new Date(now.getTime() - ranges[range]);
+    return data.filter((item) => item.timestamp > cutoff);
   };
 
   const data = useMemo(
@@ -53,7 +50,7 @@ export default function LatencyChart() {
 
   const formatXAxis = (timestamp: string) => {
     const date = new Date(timestamp);
-    return date.toLocaleString(undefined, {
+    return date.toLocaleTimeString(undefined, {
       hour: "2-digit",
       minute: "2-digit",
       hour12: true,
