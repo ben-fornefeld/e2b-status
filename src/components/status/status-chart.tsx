@@ -115,26 +115,28 @@ export default function LatencyChart() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex flex-col gap-2">
-        <h2 className="text-2xl">Latency</h2>
-        <p className="text-md text-muted-foreground">
-          How fast we create your Sandboxes.
-        </p>
+      <div className="flex items-center justify-between">
+        <div className="w-full">
+          <h2 className="text-2xl">Latency</h2>
+          <p className="text-md mt-1 flex max-w-[80%] text-muted-foreground">
+            How fast we create your Sandboxes.
+          </p>
+        </div>
+        <Select value={timeRange} onValueChange={setTimeRange}>
+          <SelectTrigger className="z-10 w-[140px]">
+            <SelectValue placeholder="Select time range" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="1h">Last Hour</SelectItem>
+            <SelectItem value="6h">Last 6 Hours</SelectItem>
+            <SelectItem value="24h">Last 24 Hours</SelectItem>
+            <SelectItem value="7d">Last 7 Days</SelectItem>
+            <SelectItem value="30d">Last 30 Days</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
       <div className="w-full space-y-4">
         <div className="relative h-[200px] md:h-[260px]">
-          <Select value={timeRange} onValueChange={setTimeRange}>
-            <SelectTrigger className="absolute right-0 top-0 z-10 w-[140px] md:right-10 md:top-4">
-              <SelectValue placeholder="Select time range" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="1h">Last Hour</SelectItem>
-              <SelectItem value="6h">Last 6 Hours</SelectItem>
-              <SelectItem value="24h">Last 24 Hours</SelectItem>
-              <SelectItem value="7d">Last 7 Days</SelectItem>
-              <SelectItem value="30d">Last 30 Days</SelectItem>
-            </SelectContent>
-          </Select>
           <ResponsiveContainer className="md:py-5 md:pl-3 md:pr-10">
             <LineChart
               data={data}
