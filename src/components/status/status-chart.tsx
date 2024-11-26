@@ -23,7 +23,12 @@ export default function LatencyChart() {
   const { statusChecks } = useStatusData();
 
   const filterDataByTimeRange = (data: any[], range: string) => {
-    const now = new Date();
+    if (data.length === 0) return [];
+
+    const latestDataPoint = new Date(
+      Math.max(...data.map((item) => item.timestamp.getTime())),
+    );
+
     const ranges: { [key: string]: number } = {
       "1h": 60 * 60 * 1000,
       "6h": 6 * 60 * 60 * 1000,
@@ -31,30 +36,38 @@ export default function LatencyChart() {
       "7d": 7 * 24 * 60 * 60 * 1000,
       "30d": 30 * 24 * 60 * 60 * 1000,
     };
-    const cutoff = new Date(now.getTime() - ranges[range]);
-    return data.filter((item) => item.timestamp > cutoff);
+
+    const cutoff = new Date(latestDataPoint.getTime() - ranges[range]);
+
+    console.log("Filtering data:", {
+      range,
+      latestDataPoint: latestDataPoint.toISOString(),
+      cutoff: cutoff.toISOString(),
+      totalDataPoints: data.length,
+      firstDataPoint: data[0]?.timestamp.toISOString(),
+      lastDataPoint: data[data.length - 1]?.timestamp.toISOString(),
+    });
+
+    const filtered = data.filter(
+      (item) => item.timestamp.getTime() > cutoff.getTime(),
+    );
+
+    return filtered;
   };
 
-  const data = useMemo(
-    () =>
-      filterDataByTimeRange(
-        statusChecks.map((check) => ({
-          timestamp: new Date(check.timestamp + "Z"),
-          responseTime: check.response_time_ms,
-          success: check.success,
-        })),
-        timeRange,
-      ),
-    [statusChecks, timeRange],
-  );
+  const data = useMemo(() => {
+    const mappedData = statusChecks.map((check) => ({
+      timestamp: new Date(check.timestamp),
+      responseTime: check.response_time_ms,
+      success: check.success,
+    }));
+
+    return filterDataByTimeRange(mappedData, timeRange);
+  }, [statusChecks, timeRange]);
 
   const formatXAxis = (timestamp: string) => {
     const date = new Date(timestamp);
-    return date.toLocaleTimeString(undefined, {
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: true,
-    });
+    return `${date.toLocaleTimeString()}`;
   };
 
   const formatTooltip = (value: any, name: string) => {
@@ -88,7 +101,7 @@ export default function LatencyChart() {
                 top: 5,
                 right: 10,
                 left: 5,
-                bottom: 30, // Add more bottom margin to accommodate angled labels
+                bottom: 30,
               }}
             >
               <XAxis
@@ -100,7 +113,7 @@ export default function LatencyChart() {
                 interval="preserveStartEnd"
                 minTickGap={50}
                 stroke="hsl(var(--muted-foreground))"
-                dy={10} // Optional: Adjust label position vertically if needed
+                dy={10}
               />
               <YAxis
                 domain={[0, 1500]}
@@ -118,14 +131,14 @@ export default function LatencyChart() {
               <Tooltip
                 labelFormatter={(label) => {
                   const date = new Date(label);
-                  return date.toLocaleString(undefined, {
+                  return `${date.toLocaleString(undefined, {
                     hour: "2-digit",
                     minute: "2-digit",
                     second: "2-digit",
                     hour12: true,
                     day: "numeric",
                     month: "short",
-                  });
+                  })} UTC`;
                 }}
                 formatter={formatTooltip}
                 contentStyle={{

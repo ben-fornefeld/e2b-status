@@ -27,7 +27,7 @@ async function checkStatus() {
     success: response.status === 201,
     http_status: response.status,
     error_message: response.status !== 201 ? await response.text() : null,
-    timestamp: new Date().toISOString(),
+    timestamp: new Date().toUTCString(),
   });
 
   if (res.status !== 201 || res.error) {
@@ -54,7 +54,7 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json(
       { error: "Internal server error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

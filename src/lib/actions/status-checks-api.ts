@@ -19,18 +19,25 @@ type GetStatusChecksResponse = ErrorResponse | GetStatusChecksSuccessResponse;
 
 export const getStatusChecks = async (): Promise<GetStatusChecksResponse> => {
   try {
-    // only get status checks from the last 24 hours
+    const endDate = new Date();
+
+    const startDate = new Date(endDate);
+    startDate.setDate(startDate.getDate() - 30);
+
     const { data, error }: PostgrestResponse<StatusCheck> = await supabaseAdmin
       .from("status_checks")
       .select("*")
-      .gte(
-        "timestamp",
-        new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
-      );
+      .gte("timestamp", startDate.toISOString())
+      .order("timestamp", { ascending: true });
+
+    console.log(
+      "API: Fetched status checks:",
+      data?.[0],
+      data?.[data.length - 1],
+    );
 
     if (error) {
       console.error(error);
-
       return {
         type: "error",
         message: error.message,
