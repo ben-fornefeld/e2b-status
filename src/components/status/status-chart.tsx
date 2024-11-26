@@ -22,11 +22,36 @@ export default function LatencyChart() {
   const [timeRange, setTimeRange] = useState("1h");
   const { statusChecks } = useStatusData();
 
+  const aggregateDataByDay = (data: any[]) => {
+    const dailyData = data.reduce((acc: any, curr) => {
+      const date = new Date(curr.timestamp);
+      const dateKey = date.toISOString().split("T")[0];
+
+      if (!acc[dateKey]) {
+        acc[dateKey] = {
+          values: [],
+          timestamp: new Date(dateKey),
+        };
+      }
+
+      acc[dateKey].values.push(curr.responseTime);
+      return acc;
+    }, {});
+
+    return Object.values(dailyData).map((day: any) => ({
+      timestamp: day.timestamp,
+      responseTime: Math.round(
+        day.values.reduce((sum: number, val: number) => sum + val, 0) /
+          day.values.length,
+      ),
+    }));
+  };
+
   const filterDataByTimeRange = (data: any[], range: string) => {
     if (data.length === 0) return [];
 
     const latestDataPoint = new Date(
-      Math.max(...data.map((item) => item.timestamp.getTime())),
+      Math.max(...data.map((item) => new Date(item.timestamp).getTime())),
     );
 
     const ranges: { [key: string]: number } = {
@@ -44,20 +69,29 @@ export default function LatencyChart() {
       latestDataPoint: latestDataPoint.toISOString(),
       cutoff: cutoff.toISOString(),
       totalDataPoints: data.length,
-      firstDataPoint: data[0]?.timestamp.toISOString(),
-      lastDataPoint: data[data.length - 1]?.timestamp.toISOString(),
+      firstDataPoint: data[0]?.timestamp,
+      lastDataPoint: data[data.length - 1]?.timestamp,
+      samplePoints: data.slice(0, 3).map((d) => ({
+        original: d.timestamp,
+        parsed: new Date(d.timestamp).toISOString(),
+      })),
     });
 
-    const filtered = data.filter(
-      (item) => item.timestamp.getTime() > cutoff.getTime(),
-    );
+    const filtered = data.filter((item) => {
+      const itemTime = new Date(item.timestamp).getTime();
+      return itemTime > cutoff.getTime();
+    });
+
+    if (range === "7d" || range === "30d") {
+      return aggregateDataByDay(filtered);
+    }
 
     return filtered;
   };
 
   const data = useMemo(() => {
     const mappedData = statusChecks.map((check) => ({
-      timestamp: new Date(check.timestamp),
+      timestamp: new Date(check.timestamp).toISOString(),
       responseTime: check.response_time_ms,
       success: check.success,
     }));
@@ -67,7 +101,7 @@ export default function LatencyChart() {
 
   const formatXAxis = (timestamp: string) => {
     const date = new Date(timestamp);
-    return `${date.toLocaleTimeString()}`;
+    return date.toTimeString().split(" ")[0];
   };
 
   const formatTooltip = (value: any, name: string) => {
@@ -131,14 +165,14 @@ export default function LatencyChart() {
               <Tooltip
                 labelFormatter={(label) => {
                   const date = new Date(label);
-                  return `${date.toLocaleString(undefined, {
+                  return date.toLocaleString(undefined, {
                     hour: "2-digit",
                     minute: "2-digit",
                     second: "2-digit",
                     hour12: true,
                     day: "numeric",
                     month: "short",
-                  })} UTC`;
+                  });
                 }}
                 formatter={formatTooltip}
                 contentStyle={{
