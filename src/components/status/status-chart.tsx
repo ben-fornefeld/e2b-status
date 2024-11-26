@@ -50,9 +50,7 @@ export default function LatencyChart() {
   const filterDataByTimeRange = (data: any[], range: string) => {
     if (data.length === 0) return [];
 
-    const latestDataPoint = new Date(
-      Math.max(...data.map((item) => new Date(item.timestamp).getTime())),
-    );
+    const latestDataPoint = new Date(data[data.length - 1].timestamp);
 
     const ranges: { [key: string]: number } = {
       "1h": 60 * 60 * 1000,
@@ -92,9 +90,14 @@ export default function LatencyChart() {
       return date.toLocaleDateString(undefined, {
         month: "short",
         day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
       });
     }
-    return date.toTimeString().split(" ")[0];
+    return date.toLocaleTimeString(undefined, {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
   };
 
   const formatTooltip = (value: any, name: string) => {
